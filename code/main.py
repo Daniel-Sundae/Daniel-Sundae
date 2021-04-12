@@ -13,66 +13,85 @@ def main():
         def __init__(self):
             self._size = 0
             self.time = 0
+            self.data = {}
+
+        def simulation_parameters(self):
+            """Add simulation time parameters"""
+            self.time = None
+            self.hour_step = None
+            self.years = None
+            self.dt = None
+            self.steps = None
 
         def add_sun(self):
             """Add sun to solarsystem"""
             self._size += 1
             self.sun = _round_object()
             self.sun.name = "sun"
+            self.data["sun"] = [333000, 109, 0, 0, 0, 0, "#f7dc6f"]
 
         def add_mercury(self):
             """Add mercury to solarsystem"""
             self._size += 1
             self.mercury = _round_object()
             self.mercury.name = "mercury"
+            self.data["mercury"] = [0.055, 0.3829, 0.387, 0, 0, (47.362/29.78)*(2*math.pi), "#b2babb"]
 
         def add_venus(self):
             """Add venus to solarsystem"""
             self._size += 1
             self.venus = _round_object()
             self.venus.name = "venus"
+            self.data["venus"] = [0.815, 0.95, 0.72, 0, 0, (35.02/29.78)*(2*math.pi), "#f9e79f"]
 
         def add_earth(self):
             """Add earth to solarsystem"""
             self._size += 1
             self.earth = _round_object()
             self.earth.name = "earth"
+            self.data["earth"] = [1, 1, 1, 0, 0, 2*math.pi, "#3498db"]
 
         def add_mars(self):
             """Add mars to solarsystem"""
             self._size += 1
             self.mars = _round_object()
             self.mars.name = "mars"
+            self.data["mars"] = [0.107, 0.53, 1.52, 0, 0, (24.097/29.78)*(2*math.pi), "red"]
 
         def add_jupiter(self):
             """Add jupiter to solarsystem"""
             self._size += 1
             self.jupiter = _round_object()
             self.jupiter.name = "jupiter"
+            self.data["jupiter"] = [318, 10.97, 5.2, 0, 0, (13.07/29.78)*(2*math.pi), "#f0b27a"]
 
         def add_saturn(self):
             """Add saturn to solarsystem"""
             self._size += 1
             self.saturn = _round_object()
             self.saturn.name = "saturn"
+            self.data["saturn"] = [95.159, 58232/6371, 9.58, 0, 0, (9.68/29.78)*(2*math.pi), "#af601a"]
 
         def add_uranus(self):
             """Add uranus to solarsystem"""
             self._size += 1
             self.uranus = _round_object()
             self.uranus.name = "uranus"
+            self.data["uranus"] = [14.536, 4, 19.21, 0, 0, (6.8/29.78)*(2*math.pi), "#85c1e9"]
 
         def add_neptune(self):
             """Add saturn to solarsystem"""
             self._size += 1
             self.neptune = _round_object()
             self.neptune.name = "neptune"
+            self.data["neptune"] = [17.147, 24622/6371, 30.07, 0, 0, (5.43/29.78)*(2*math.pi), "#1f618d"]
 
         def add_asteroid(self):
             """Add asteroid to solarsystem"""
             self._size += 1
             self.asteroid = _round_object()
             self.asteroid.name = "asteroid"
+            self.data["asteroid"] = [0.01, 1, 0.74854, -12.004, 0, 4*math.pi, "#b2babb"]
 
         def get_size(self):
             return self._size
@@ -110,16 +129,18 @@ def main():
             self.kinetic_energy_list = []
 
 
-    def create_solarsystem():
+    def create_solarsystem(body_list=None):
         """Create solarsystem object with planets"""
 
         solarsystem = solarsystem_object()
 
-        # for bodyindex in range(len(solarsystem_dict)):
+        # for bodyindex in range(len(solarsystem.data)):
             # print("Index nummer", bodyindex)
             # solarsystem.add_body(bodyindex)
 
-        for body in solarsystem_dict:
+        if body_list == None: body_list = ["sun", "mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune", "asteroid"]
+
+        for body in body_list:
             if body == "sun":
                 solarsystem.add_sun()
             elif body == "mercury":
@@ -141,92 +162,91 @@ def main():
             elif body == "asteroid":
                 solarsystem.add_asteroid()
 
-            getattr(solarsystem, str(body)).mass = solarsystem_dict[body][0] # --> solarsystem.sun.mass = 333000
-            getattr(solarsystem, str(body)).radius = solarsystem_dict[body][1]
-            getattr(solarsystem, str(body)).xposition = solarsystem_dict[body][2]
-            getattr(solarsystem, str(body)).yposition = solarsystem_dict[body][3]
-            getattr(solarsystem, str(body)).xspeed = solarsystem_dict[body][4]
-            getattr(solarsystem, str(body)).yspeed = solarsystem_dict[body][5]
-            getattr(solarsystem, str(body)).colour = solarsystem_dict[body][6]
-            getattr(solarsystem, str(body)).name = body
+            getattr(solarsystem, str(body)).mass = solarsystem.data[body][0] # --> solarsystem.sun.mass = 333000
+            getattr(solarsystem, str(body)).radius = solarsystem.data[body][1]
+            getattr(solarsystem, str(body)).xposition = solarsystem.data[body][2]
+            getattr(solarsystem, str(body)).yposition = solarsystem.data[body][3]
+            getattr(solarsystem, str(body)).xspeed = solarsystem.data[body][4]
+            getattr(solarsystem, str(body)).yspeed = solarsystem.data[body][5]
+            getattr(solarsystem, str(body)).colour = solarsystem.data[body][6]
 
         return solarsystem
 
-    def simulate(solarsystem, integrator):
-        """Simulate solarsystem and return dictionary with visited planet trajectory coordinates and dictionary with past planet velocities"""
-        global dt
-        global steps
-        global years
-        global hour_step
-        hour_step = 10
-        years = 1
-        dt = hour_step/(365*24)
-        steps = int(years/dt)
+    # def simulate(solarsystem, integrator):
+    #     """Simulate solarsystem and return dictionary with visited planet trajectory coordinates and dictionary with past planet velocities"""
+    #     global dt
+    #     global steps
+    #     global years
+    #     global hour_step
+    #     hour_step = 10
+    #     years = 1
+    #     dt = hour_step/(365*24)
+    #     steps = int(years/dt)
+    #
+    #     for body in solarsystem.data:
+    #         getattr(solarsystem, str(body)).xposition_list.append(getattr(solarsystem, str(body)).xposition)
+    #         getattr(solarsystem, str(body)).yposition_list.append(getattr(solarsystem, str(body)).yposition)
+    #         getattr(solarsystem, str(body)).xspeed_list.append(getattr(solarsystem, str(body)).xspeed)
+    #         getattr(solarsystem, str(body)).yspeed_list.append(getattr(solarsystem, str(body)).yspeed)
+    #         getattr(solarsystem, str(body)).xacceleration_list.append(getattr(solarsystem, str(body)).xacceleration)
+    #         getattr(solarsystem, str(body)).yacceleration_list.append(getattr(solarsystem, str(body)).yacceleration)
+    #
+    #     for i in range(steps):
+    #         solarsystem.time += dt
+    #         for body in solarsystem.data:
+    #             update(getattr(solarsystem, str(body)), integrator)
+    #             getattr(solarsystem, str(body)).xposition_list.append(getattr(solarsystem, str(body)).xposition)
+    #             getattr(solarsystem, str(body)).yposition_list.append(getattr(solarsystem, str(body)).yposition)
+    #             getattr(solarsystem, str(body)).xspeed_list.append(getattr(solarsystem, str(body)).xspeed)
+    #             getattr(solarsystem, str(body)).yspeed_list.append(getattr(solarsystem, str(body)).yspeed)
+    #             getattr(solarsystem, str(body)).xacceleration_list.append(getattr(solarsystem, str(body)).xacceleration)
+    #             getattr(solarsystem, str(body)).yacceleration_list.append(getattr(solarsystem, str(body)).yacceleration)
+    #
+    #
+    #             ### REMOVE LATER ###
+    #             # if i == steps/2 and body == "earth":
+    #             #     print(body, "xposition is", solarsystem.earth.xposition)
+    #             #     print(body, "yposition is", solarsystem.earth.yposition)
+    #             #     print("asteroid xposition is", solarsystem.asteroid.xposition)
+    #             #     print("asteroid yposition is", solarsystem.asteroid.yposition)
+    #             #     return position_dict, velocity_dict
+    #
+    #             ## ###
+    #
+    #     return None
 
-        for body in solarsystem_dict:
-            getattr(solarsystem, str(body)).xposition_list.append(getattr(solarsystem, str(body)).xposition)
-            getattr(solarsystem, str(body)).yposition_list.append(getattr(solarsystem, str(body)).yposition)
-            getattr(solarsystem, str(body)).xspeed_list.append(getattr(solarsystem, str(body)).xspeed)
-            getattr(solarsystem, str(body)).yspeed_list.append(getattr(solarsystem, str(body)).yspeed)
-            getattr(solarsystem, str(body)).xacceleration_list.append(getattr(solarsystem, str(body)).xacceleration)
-            getattr(solarsystem, str(body)).yacceleration_list.append(getattr(solarsystem, str(body)).yacceleration)
-
-        for i in range(steps):
-            solarsystem.time += dt
-            for body in solarsystem_dict:
-                update(getattr(solarsystem, str(body)), integrator)
-                getattr(solarsystem, str(body)).xposition_list.append(getattr(solarsystem, str(body)).xposition)
-                getattr(solarsystem, str(body)).yposition_list.append(getattr(solarsystem, str(body)).yposition)
-                getattr(solarsystem, str(body)).xspeed_list.append(getattr(solarsystem, str(body)).xspeed)
-                getattr(solarsystem, str(body)).yspeed_list.append(getattr(solarsystem, str(body)).yspeed)
-                getattr(solarsystem, str(body)).xacceleration_list.append(getattr(solarsystem, str(body)).xacceleration)
-                getattr(solarsystem, str(body)).yacceleration_list.append(getattr(solarsystem, str(body)).yacceleration)
-
-
-                ### REMOVE LATER ###
-                # if i == steps/2 and body == "earth":
-                #     print(body, "xposition is", solarsystem.earth.xposition)
-                #     print(body, "yposition is", solarsystem.earth.yposition)
-                #     print("asteroid xposition is", solarsystem.asteroid.xposition)
-                #     print("asteroid yposition is", solarsystem.asteroid.yposition)
-                #     return position_dict, velocity_dict
-
-                ## ###
-
-        return None
-
-    def draw(inner = True):
-        """Plot all planets' trajectory"""
-
-        for body in solarsystem_dict:
-
-            # Change axis to million miles
-            # getattr(solarsystem, str(body)).yposition_list = [x * 92.955807 for x in getattr(solarsystem, str(body)).yposition_list]
-            # getattr(solarsystem, str(body)).yposition_list = [x * 92.955807 for x in getattr(solarsystem, str(body)).yposition_list]
-
-            ax.plot(getattr(solarsystem, str(body)).xposition_list,getattr(solarsystem, str(body)).yposition_list, color=getattr(solarsystem, str(body)).colour, linestyle='solid', markersize = 2)
-            ax.plot(getattr(solarsystem, str(body)).xposition_list[-1],getattr(solarsystem, str(body)).yposition_list[-1], color=getattr(solarsystem, str(body)).colour, marker = "o", markersize = 0.08*getattr(solarsystem, str("sun")).radius + 0.9*math.log(getattr(solarsystem, str(body)).radius/getattr(solarsystem, str("sun")).radius))
-
-            # Add tetboxes for objects
-            if body == "asteroid":
-                ax.text(getattr(solarsystem, str(body)).xposition_list[-1],getattr(solarsystem, str(body)).yposition_list[-1]+0.1, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
-            else:
-                if inner == True:
-                    arc_percent = int(0.8*len(getattr(solarsystem, str(body)).xposition_list))
-                    ax.text(getattr(solarsystem, str(body)).xposition_list[-1],getattr(solarsystem, str(body)).yposition_list[-1]+0.1, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
-
-                    # if body == "jupiter":
-                    #     ax.text(getattr(solarsystem, str(body)).xposition_list[arc_percent],getattr(solarsystem, str(body)).yposition_list[arc_percent]+0.5, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
-                    # elif body == "mercury":
-                    #     ax.text(getattr(solarsystem, str(body)).xposition_list[arc_percent],getattr(solarsystem, str(body)).yposition_list[arc_percent]+0.5, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
-                    # else:
-                    #     ax.text(getattr(solarsystem, str(body)).xposition_list[-1],getattr(solarsystem, str(body)).yposition_list[-1]+0.1, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
-
-                elif inner == False:
-                    ax.text(getattr(solarsystem, str(body)).xposition_list[4000],getattr(solarsystem, str(body)).yposition_list[4000]+0.2, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
-
-
-        plt.show(block=True)
+    # def draw(inner = True):
+    #     """Plot all planets' trajectory"""
+    #
+    #     for body in solarsystem.data:
+    #
+    #         # Change axis to million miles
+    #         # getattr(solarsystem, str(body)).yposition_list = [x * 92.955807 for x in getattr(solarsystem, str(body)).yposition_list]
+    #         # getattr(solarsystem, str(body)).yposition_list = [x * 92.955807 for x in getattr(solarsystem, str(body)).yposition_list]
+    #
+    #         ax.plot(getattr(solarsystem, str(body)).xposition_list,getattr(solarsystem, str(body)).yposition_list, color=getattr(solarsystem, str(body)).colour, linestyle='solid', markersize = 2)
+    #         ax.plot(getattr(solarsystem, str(body)).xposition_list[-1],getattr(solarsystem, str(body)).yposition_list[-1], color=getattr(solarsystem, str(body)).colour, marker = "o", markersize = 0.08*getattr(solarsystem, str("sun")).radius + 0.9*math.log(getattr(solarsystem, str(body)).radius/getattr(solarsystem, str("sun")).radius))
+    #
+    #         # Add tetboxes for objects
+    #         if body == "asteroid":
+    #             ax.text(getattr(solarsystem, str(body)).xposition_list[-1],getattr(solarsystem, str(body)).yposition_list[-1]+0.1, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
+    #         else:
+    #             if inner == True:
+    #                 arc_percent = int(0.8*len(getattr(solarsystem, str(body)).xposition_list))
+    #                 ax.text(getattr(solarsystem, str(body)).xposition_list[-1],getattr(solarsystem, str(body)).yposition_list[-1]+0.1, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
+    #
+    #                 # if body == "jupiter":
+    #                 #     ax.text(getattr(solarsystem, str(body)).xposition_list[arc_percent],getattr(solarsystem, str(body)).yposition_list[arc_percent]+0.5, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
+    #                 # elif body == "mercury":
+    #                 #     ax.text(getattr(solarsystem, str(body)).xposition_list[arc_percent],getattr(solarsystem, str(body)).yposition_list[arc_percent]+0.5, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
+    #                 # else:
+    #                 #     ax.text(getattr(solarsystem, str(body)).xposition_list[-1],getattr(solarsystem, str(body)).yposition_list[-1]+0.1, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
+    #
+    #             elif inner == False:
+    #                 ax.text(getattr(solarsystem, str(body)).xposition_list[4000],getattr(solarsystem, str(body)).yposition_list[4000]+0.2, getattr(solarsystem, str(body)).name, color=getattr(solarsystem, str(body)).colour, fontsize = 15, zorder = 2)
+    #
+    #
+    #     plt.show(block=True)
 
     def animate(x_list, y_list, colour):
         """Continually draw animation"""
@@ -234,74 +254,74 @@ def main():
         plt.show(block=False)
         plt.pause(0.00000000000000000001)
 
-    def update(obj, integrator):
-        """Update position"""
-
-        x_force, y_force = forcefunction(obj)
-
-        if integrator == "Verlet":
-            _update_verlet(obj,[x_force,y_force])
-
-        elif integrator == "EC":
-            _update_EC(obj,[x_force,y_force])
-
-    def _update_EC(obj, forcevector):
-        """Update position with euler cromer integration"""
-
-        obj.xacceleration = forcevector[0] / obj.mass
-        obj.yacceleration = forcevector[1] / obj.mass
-
-        obj.xspeed += obj.xacceleration*dt
-        obj.yspeed += obj.yacceleration*dt
-
-        obj.xposition += obj.xspeed * dt
-        obj.yposition += obj.yspeed * dt
-
-    def _update_verlet(obj, forcevector):
-        """Update position with Verlet integration"""
-
-        obj.xacceleration = forcevector[0] / obj.mass
-        obj.yacceleration = forcevector[1] / obj.mass
-
-        #Integrator
-
-        obj.xposition = obj.xposition + obj.xspeed * dt + 0.5*obj.xacceleration*dt*dt
-        obj.yposition = obj.yposition + obj.yspeed * dt + 0.5*obj.yacceleration*dt*dt
-
-        new_x_force, new_y_force = forcefunction(obj)
-
-        new_obj_x_acceleration = new_x_force/obj.mass
-        new_obj_y_acceleration = new_y_force/obj.mass
-
-        obj.xspeed += 0.5*(new_obj_x_acceleration+obj.xacceleration)*dt
-        obj.yspeed += 0.5*(new_obj_y_acceleration+obj.yacceleration)*dt
-
-    def forcefunction(obj):
-        """Calculate force on object and return force in x and y direction"""
-        x_force = 0
-        y_force = 0
-        for body in solarsystem_dict:
-            if body == obj.name: #Do not want force on itself
-                continue
-
-            # if body != "sun": #Only sun exerts force
-            #     continue
-
-            forcevector = _forcefunction(obj, getattr(solarsystem, str(body)))
-            x_force += forcevector[0]
-            y_force += forcevector[1]
-
-        return x_force, y_force
-
-    def _forcefunction(obj1, obj2):
-        """Calculate and return the mutual attracting force between object 1 and object 2 in list [F1, F2] where F1 is x-force and y-force in direction from obj1 to obj2 and F2 is in direction from obj2 to obj1"""
-        global G
-        G = 39.478 / (333000) # Unit: (astronomisk enhet kub) per (år kvadrat) per (jordens massa)
-        r = [obj2.xposition - obj1.xposition, obj2.yposition- obj1.yposition] #Unit vector from obj1 to obj2
-        distance_squared = r[0]**2+r[1]**2
-        r_hat = [r[0]/(distance_squared**0.5), r[1]/(distance_squared**0.5)]
-        force = G*obj1.mass*obj2.mass/distance_squared
-        return [r_hat[0]*force,r_hat[1]*force]
+    # def update(obj, integrator):
+    #     """Update position"""
+    #
+    #     x_force, y_force = forcefunction(obj)
+    #
+    #     if integrator == "Verlet":
+    #         _update_verlet(obj,[x_force,y_force])
+    #
+    #     elif integrator == "EC":
+    #         _update_EC(obj,[x_force,y_force])
+    #
+    # def _update_EC(obj, forcevector):
+    #     """Update position with euler cromer integration"""
+    #
+    #     obj.xacceleration = forcevector[0] / obj.mass
+    #     obj.yacceleration = forcevector[1] / obj.mass
+    #
+    #     obj.xspeed += obj.xacceleration*dt
+    #     obj.yspeed += obj.yacceleration*dt
+    #
+    #     obj.xposition += obj.xspeed * dt
+    #     obj.yposition += obj.yspeed * dt
+    #
+    # def _update_verlet(obj, forcevector):
+    #     """Update position with Verlet integration"""
+    #
+    #     obj.xacceleration = forcevector[0] / obj.mass
+    #     obj.yacceleration = forcevector[1] / obj.mass
+    #
+    #     #Integrator
+    # 
+    #     obj.xposition = obj.xposition + obj.xspeed * dt + 0.5*obj.xacceleration*dt*dt
+    #     obj.yposition = obj.yposition + obj.yspeed * dt + 0.5*obj.yacceleration*dt*dt
+    #
+    #     new_x_force, new_y_force = forcefunction(obj)
+    #
+    #     new_obj_x_acceleration = new_x_force/obj.mass
+    #     new_obj_y_acceleration = new_y_force/obj.mass
+    #
+    #     obj.xspeed += 0.5*(new_obj_x_acceleration+obj.xacceleration)*dt
+    #     obj.yspeed += 0.5*(new_obj_y_acceleration+obj.yacceleration)*dt
+    #
+    # def forcefunction(obj):
+    #     """Calculate force on object and return force in x and y direction"""
+    #     x_force = 0
+    #     y_force = 0
+    #     for body in solarsystem.data:
+    #         if body == obj.name: #Do not want force on itself
+    #             continue
+    #
+    #         # if body != "sun": #Only sun exerts force
+    #         #     continue
+    #
+    #         forcevector = _forcefunction(obj, getattr(solarsystem, str(body)))
+    #         x_force += forcevector[0]
+    #         y_force += forcevector[1]
+    #
+    #     return x_force, y_force
+    #
+    # def _forcefunction(obj1, obj2):
+    #     """Calculate and return the mutual attracting force between object 1 and object 2 in list [F1, F2] where F1 is x-force and y-force in direction from obj1 to obj2 and F2 is in direction from obj2 to obj1"""
+    #     global G
+    #     G = 39.478 / (333000) # Unit: (astronomisk enhet kub) per (år kvadrat) per (jordens massa)
+    #     r = [obj2.xposition - obj1.xposition, obj2.yposition- obj1.yposition] #Unit vector from obj1 to obj2
+    #     distance_squared = r[0]**2+r[1]**2
+    #     r_hat = [r[0]/(distance_squared**0.5), r[1]/(distance_squared**0.5)]
+    #     force = G*obj1.mass*obj2.mass/distance_squared
+    #     return [r_hat[0]*force,r_hat[1]*force]
 
     def energy_results():
         """Generate energy result figures"""
@@ -327,7 +347,7 @@ def main():
                 # asteroid_earth()
                 # draw()
 
-                for body in solarsystem_dict:
+                for body in solarsystem.data:
                     assert len(getattr(solarsystem, str(body)).total_energy_list) == len(getattr(solarsystem, str(body)).potential_energy_list) == len(getattr(solarsystem, str(body)).kinetic_energy_list) == 0
 
                     if body != "earth":
@@ -420,7 +440,7 @@ def main():
             kinetic_energy = 0.5*obj.mass*(x_speed**2+y_speed**2)
             # Calculating potential energy
             potential_energy = 0
-            for M in solarsystem_dict:
+            for M in solarsystem.data:
                 if obj.name == M: #Do not want energy from itself
                     continue
                 r = [x_position - getattr(solarsystem, str(M)).xposition_list[i], y_position - getattr(solarsystem, str(M)).yposition_list[i]] #Unit vector from body to M
@@ -535,59 +555,59 @@ def main():
         print("Biggest acceleration is", biggest_acceleration, "at time", time_of_biggest_acceleration)
         return distance_list, acceleration_list, earth_displacement
 
-    def solarsystem_canvas_setup(integrator_string, length="AU", size="large"):
-        """Setting up canvas"""
-        global fig
-        global ax
-        fig, ax = plt.subplots()
-
-
-        ax.set_facecolor("#17202a")
-        if hour_step == 1:
-            ax.set_title("Solar system simulation with " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = "+ str(hour_step) + " hour", fontsize=30)
-        else:
-            # ax.set_title("Asteroid with mass of Uranus using " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = 10 minutes", fontsize=30)
-            # ax.set_title("Asteroid with mass of Jupiter using " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = 10 minutes", fontsize=30)
-            # ax.set_title("Asteroid with one tenth of the mass of the sun. Simulated using " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = 10 minutes", fontsize=30)
-            ax.set_title("Asteroid with the mass of the sun. Simulated using " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = 10 minutes", fontsize=30)
-
-
-            # ax.set_title("Asteroid near miss with " + str(integrator_string) + " integration." + "\n" + "Time step = 10 minutes", fontsize=30)
-            # ax.set_title("Asteroid near miss with " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = 10 minutes", fontsize=30)
-
-
-
-        ax.tick_params(axis='x', labelsize=20)
-        ax.tick_params(axis='y', labelsize=20)
-
-        if length == "miles":
-            ax.set_xlabel('Distance [Million Miles]', fontsize=28)
-            ax.set_ylabel('Distance [Million Miles]', fontsize=28)
-        else:
-            ax.set_xlabel('Distance [AU]', fontsize=28)
-            ax.set_ylabel('Distance [AU]', fontsize=28)
-
-        if size == "small":
-            ax.set(xlim=(0.66, 0.68), ylim=(-0.76, -0.74))
-        else:
-            ax.set(xlim=(-32, 32), ylim=(-32, 32))
+    # def solarsystem_canvas_setup(integrator_string, length="AU", size="large"):
+    #     """Setting up canvas"""
+    #     global fig
+    #     global ax
+    #     fig, ax = plt.subplots()
+    #
+    #
+    #     ax.set_facecolor("#17202a")
+    #     if hour_step == 1:
+    #         ax.set_title("Solar system simulation with " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = "+ str(hour_step) + " hour", fontsize=30)
+    #     else:
+    #         # ax.set_title("Asteroid with mass of Uranus using " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = 10 minutes", fontsize=30)
+    #         # ax.set_title("Asteroid with mass of Jupiter using " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = 10 minutes", fontsize=30)
+    #         # ax.set_title("Asteroid with one tenth of the mass of the sun. Simulated using " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = 10 minutes", fontsize=30)
+    #         ax.set_title("Asteroid with the mass of the sun. Simulated using " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = 10 minutes", fontsize=30)
+    #
+    #
+    #         # ax.set_title("Asteroid near miss with " + str(integrator_string) + " integration." + "\n" + "Time step = 10 minutes", fontsize=30)
+    #         # ax.set_title("Asteroid near miss with " + str(integrator_string) + " integration." + "\n" + "Simulation time = " + str(years)+ " earth-years. Time step = 10 minutes", fontsize=30)
+    #
+    #
+    #
+    #     ax.tick_params(axis='x', labelsize=20)
+    #     ax.tick_params(axis='y', labelsize=20)
+    #
+    #     if length == "miles":
+    #         ax.set_xlabel('Distance [Million Miles]', fontsize=28)
+    #         ax.set_ylabel('Distance [Million Miles]', fontsize=28)
+    #     else:
+    #         ax.set_xlabel('Distance [AU]', fontsize=28)
+    #         ax.set_ylabel('Distance [AU]', fontsize=28)
+    #
+    #     if size == "small":
+    #         ax.set(xlim=(0.66, 0.68), ylim=(-0.76, -0.74))
+    #     else:
+    #         ax.set(xlim=(-32, 32), ylim=(-32, 32))
 
 
 
     #[mass (eathmasses), radius (eathradiuses), x-position (Astronomical units), y-position (Astronomical units), x-speed (AU per earth-year), y-speed (AU per earth-year), colour]
-    global solarsystem_dict
-    solarsystem_dict = {
-    "sun": [333000, 109, 0, 0, 0, 0, "#f7dc6f"],
-    "mercury": [0.055, 0.3829, 0.387, 0, 0, (47.362/29.78)*(2*math.pi), "#b2babb"],
-    "venus": [0.815, 0.95, 0.72, 0, 0, (35.02/29.78)*(2*math.pi), "#f9e79f"],
-    "earth": [1, 1, 1, 0, 0, 2*math.pi, "#3498db"],
-    "mars": [0.107, 0.53, 1.52, 0, 0, (24.097/29.78)*(2*math.pi), "red"],
-    "jupiter": [318, 10.97, 5.2, 0, 0, (13.07/29.78)*(2*math.pi), "#f0b27a"],
-    "saturn": [95.159, 58232/6371, 9.58, 0, 0, (9.68/29.78)*(2*math.pi), "#af601a"],
-    "uranus": [14.536, 4, 19.21, 0, 0, (6.8/29.78)*(2*math.pi), "#85c1e9"],
-    "neptune": [17.147, 24622/6371, 30.07, 0, 0, (5.43/29.78)*(2*math.pi), "#1f618d"],
-    "asteroid": [0.01, 1, 0.74854, -12.004, 0, 4*math.pi, "#b2babb"] #Near earth
-    }
+    # global solarsystem.data
+    # solarsystem.data = {
+    # "sun": [333000, 109, 0, 0, 0, 0, "#f7dc6f"],
+    # "mercury": [0.055, 0.3829, 0.387, 0, 0, (47.362/29.78)*(2*math.pi), "#b2babb"],
+    # "venus": [0.815, 0.95, 0.72, 0, 0, (35.02/29.78)*(2*math.pi), "#f9e79f"],
+    # "earth": [1, 1, 1, 0, 0, 2*math.pi, "#3498db"],
+    # "mars": [0.107, 0.53, 1.52, 0, 0, (24.097/29.78)*(2*math.pi), "red"],
+    # "jupiter": [318, 10.97, 5.2, 0, 0, (13.07/29.78)*(2*math.pi), "#f0b27a"],
+    # "saturn": [95.159, 58232/6371, 9.58, 0, 0, (9.68/29.78)*(2*math.pi), "#af601a"],
+    # "uranus": [14.536, 4, 19.21, 0, 0, (6.8/29.78)*(2*math.pi), "#85c1e9"],
+    # "neptune": [17.147, 24622/6371, 30.07, 0, 0, (5.43/29.78)*(2*math.pi), "#1f618d"],
+    # "asteroid": [0.01, 1, 0.74854, -12.004, 0, 4*math.pi, "#b2babb"] #Near earth
+    # }
 
     integrator = "EC"
     integrator_string = "Euler-Cromer"
@@ -595,11 +615,18 @@ def main():
     integrator_string = "Verlet"
 
     solarsystem = create_solarsystem()
-    simulate(solarsystem, str(integrator))
-    solarsystem_canvas_setup(integrator_string)
-    draw()
-    asteroid_results()
+    import importlib
+    simulate = importlib.import_module("simulate")
+    simulate.simulate(solarsystem, integrator)
+    # simulate(solarsystem, str(integrator))
+    graphics = importlib.import_module("graphics")
+    graphics.solarsystem_canvas_setup(solarsystem, integrator_string)
+    graphics.draw(solarsystem)
+    # asteroid_results()
     # energy_results()
+
+
+
 
 if __name__ == "__main__": main()
 
@@ -609,7 +636,7 @@ if __name__ == "__main__": main()
 # TODO
 # Move energy related functions to another file
 # Create animation
-# Create GUI
+# Create GUI (includes tidying code for canvas setup amongst others)
 # Create API that fetch real life data
 # Create 3D animation
 
