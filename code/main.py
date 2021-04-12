@@ -158,8 +158,8 @@ def main():
         global steps
         global years
         global hour_step
-        hour_step = 1
-        years = 100
+        hour_step = 10
+        years = 1
         dt = hour_step/(365*24)
         steps = int(years/dt)
 
@@ -607,5 +607,12 @@ if __name__ == "__main__": main()
 
 
 # TODO
+# Move energy related functions to another file
+# Create animation
+# Create GUI
+# Create API that fetch real life data
+# Create 3D animation
+
+
 
 # IDEAS
