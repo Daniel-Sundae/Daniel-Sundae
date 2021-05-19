@@ -10,7 +10,7 @@ def simulate(solarsystem, integrator):
 
     """Simulate solarsystem and return dictionary with visited planet trajectory coordinates and dictionary with past planet velocities"""
     solarsystem.hour_step = 10
-    solarsystem.years = 100
+    solarsystem.years = 1
     solarsystem.dt = solarsystem.hour_step/(365*24)
     solarsystem.steps = int(solarsystem.years/solarsystem.dt)
 
